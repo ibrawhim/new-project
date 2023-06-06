@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+rel="stylesheet"
+integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
+crossorigin="anonymous">
+        <script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+crossorigin="anonymous"></script>
+
+    </head>
+    <body onload="displayItems()" class="bg-dark">
+
+      <!-- HEADER SECTION ONE -->
+      <header class="p-3 text-bg-dark">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center
+justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0
+text-white text-decoration-none">
+              <svg class="bi me-2" width="40" height="32" role="img"
+aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2
+justify-content-center mb-md-0">
+              <li><a href="#" class="nav-link px-2
+text-light">Dashboard</a></li>
+              <li><a href="#" class="nav-link px-2 text-primary">The
+reason to be here</a></li>
+              <li><a href="#" class="nav-link px-2 text-white"
+id="navname">Name</a></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+              <input type="search" class="form-control
+form-control-dark text-bg-dark" placeholder="Search..."
+aria-label="Search">
+            </form>
+
+            <div class="text-end">
+
+              <button onclick="signout()" type="button" class="btn
+btn-warning" >Sign-out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+      <hr class="border-white">
+
+      <!-- FOR THE MODAL EDIT NOTE SECTION -->
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1"
+aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Dashboard</h1>
+              <button type="button" class="btn-close"
+data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <textarea name="" id="editMessage" cols="30"
+rows="10"></textarea>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary"
+data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary"
+data-bs-dismiss="modal" onclick="saveItem()">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOR DISPLAY OF NAME ,PHONE, STATE -->
+      <div class="d-flex m-5">
+        <div>
+            <div id="textn" class="text-light">Time</div>
+            <div id="textf" class="text-light">Name</div>
+            <div id="textl" class="text-light">Phone Number</div>
+            <div id="textu" class="text-light">State</div>
+        </div>
+        <div class=" mx-auto w-50">
+            <textarea name="" id="textarea"  class="form-control"
+cols="50" rows="3"></textarea><br>
+            <button onclick="text()" class="btn bg-success mb-2 w-100
+fw-bold text-white">Add Note</button>
+
+
+              <div  class="card bg-dark" style="width: 21rem;">
+                  <div id="display"></div>
+              </div>
+        </div>
+      </div>
+
+      <script>
+        // THIS IS FOR SIGNOUT BUTTON
+       const signout= ()=>{
+          window.location.href = "index.html"
+        }
+
+        // THIS IS FOR DISPLAY OF SIGN UP INFORMATION (signup)
+        let allComb = []
+        if (localStorage.combApp){
+        allComb = JSON.parse(localStorage.getItem("combApp"))
+        }
+        for (let index = 0; index < allComb.length; index++) {
+        navname.innerHTML = `${allComb[index].surname}`
+        textf.innerHTML = `${allComb[index].surname}`
+        }
+
+
+        // THIS IS FOR DISPLAY OF CONTACT INFORMATION (contact)
+        let cllTomb = []
+        if (localStorage.tombApp){
+        cllTomb = JSON.parse(localStorage.getItem("tombApp"))
+        }
+        for (let index = 0; index < cllTomb.length; index++) {
+        textl.innerHTML = `${cllTomb[index].phone}`
+        textu.innerHTML = `${cllTomb[index].state}`
+        }
+
+
+
+        // THIS IS FOR DISPLAY OF NOTE MESSAGE (dashboard)
+        myNotes = []
+        if (localStorage.noteApp){
+        myNotes = JSON.parse(localStorage.getItem("noteApp"))
+        }
+        const text= ()=>{
+        let date = new Date()
+        let note = {
+           time: date.toLocaleTimeString(),
+           message: textarea.value
+        }
+
+
+         console.log(note);
+
+        myNotes.push(note)
+        console.log(myNotes);
+        textarea.value = ""
+        localStorage.setItem("noteApp",JSON.stringify(myNotes))
+             displayItems()
+        }
+
+        const displayItems =()=> {
+          display.innerHTML = ""
+        for (let index = 0; index < myNotes.length; index++) {
+        textn.innerHTML = `${myNotes[index].time}`
+        display.innerHTML += `
+        <div class="card bg-info" style="width: 18rem;">
+            <p>${myNotes[index].message}</p>
+        </div>
+        <button class="btn btn-danger"
+onclick="deleteItem(${index})">Delete</button>
+        <button class="btn btn-info" data-bs-toggle="modal"
+data-bs-target="#exampleModal"
+onclick="editItem(${index})">Edit</button>
+        `
+            }
+        }
+
+        // FOR THE DELETE OF THE NOTE MESSAGE  *dashboard*
+        function deleteItem(userIndex){
+           var response=confirm("DO YOU WANT TO DELETE.....ARE YOU SURE?")
+              if(response==true){
+              myNotes.splice(userIndex,1)
+              localStorage.setItem("noteApp",JSON.stringify(myNotes))
+              displayItems()
+            }else{
+                console("make your choice")
+            }
+        }
+
+
+
+        // FOR THE EDIT OF THE NOTE MESSAGE  *dashboard*
+        function saveItem(userIndex){
+            var newDetails = {
+                  message: editMessage, 
+            }
+
+            myNotes.splice(userIndex,1,newDetails)
+            localStorage.setItem("noteApp",JSON.stringify(myNotes))
+            displayItems()
+            alert("UPDATED SUCCESSFULLY")
+        }
+      </script>
+    </body>
+</html>
